@@ -12,32 +12,32 @@ const mockTasks: Task[] = [
       id: "1",
       title: "Task 1",
       status: "completed",
-      createdAt: new Date().toISOString(),
+      createdAt: Date.now(),
     },
     {
       id: "2",
       title: "Task 2",
       status: "pending",
-      createdAt: new Date().toISOString(),
+      createdAt: Date.now(),
     },
     {
       id: "3",
       title: "Task 3",
       status: "pending",
-      createdAt: new Date().toISOString(),
+      createdAt: Date.now(),
       dueDate: "2020-01-01",
     },
     {
       id: "4",
       title: "Task 4",
       status: "completed",
-      createdAt: new Date().toISOString(),
+      createdAt: Date.now(),
     },
     {
       id: "5",
       title: "Task 5",
       status: "pending",
-      createdAt: new Date().toISOString(),
+      createdAt: Date.now(),
     },
   ];
 

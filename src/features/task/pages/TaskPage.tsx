@@ -48,7 +48,7 @@ const TaskPage = () => {
       setTasks((prev) =>
         prev.map((task) =>
           task.id === id
-            ? { ...task, title: newTitle, updateAt: new Date().toISOString() }
+            ? { ...task, title: newTitle, updateAt: Date.now() }
             : task,
         ),
       );

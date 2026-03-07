@@ -6,7 +6,7 @@ export const createTask = (title: string, dueDate?: string): Task => {
     id: crypto.randomUUID(),
     title,
     status: "pending",
-    createdAt: new Date().toISOString(),
+    createdAt: Date.now(),
     dueDate,
   };
 };
