@@ -1,0 +1,39 @@
+.container {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .code {
+    font-size: 90px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  
+  .title {
+    font-size: 28px;
+    font-weight: 600;
+  }
+  
+  .message {
+    color: var(--text-secondary);
+    max-width: 400px;
+  }
+  
+  .homeButton {
+    margin-top: 10px;
+    padding: 10px 18px;
+    background: var(--accent);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+  }
+  
+  .homeButton:hover {
+    opacity: 0.9;
+  }
