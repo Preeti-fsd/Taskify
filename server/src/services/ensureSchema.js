@@ -57,6 +57,7 @@ const statements = [
 ];
 
 const alterStatements = [
+  `ALTER TABLE users ADD COLUMN last_login_at DATETIME DEFAULT NULL`,
   `ALTER TABLE tasks ADD COLUMN reminder_enabled TINYINT(1) NOT NULL DEFAULT 0`,
   `ALTER TABLE tasks ADD COLUMN reminder_type VARCHAR(16) NOT NULL DEFAULT 'email'`,
   `ALTER TABLE tasks ADD COLUMN reminder_timing VARCHAR(32) NOT NULL DEFAULT '15 min'`,

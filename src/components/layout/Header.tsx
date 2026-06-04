@@ -25,6 +25,12 @@ const Header = () => {
         <span>Taskify</span>
       </NavLink>
 
+      {session?.role === "admin" && (
+        <span className={styles.adminBadge} aria-label="Admin mode">
+          Admin Mode
+        </span>
+      )}
+
       {!isAuthRoute && session && (
         <nav className={styles.navLinks} aria-label="Primary">
           <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`} to="/dashboard">
