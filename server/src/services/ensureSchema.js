@@ -57,20 +57,20 @@ const statements = [
 ];
 
 const alterStatements = [
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS reminder_enabled TINYINT(1) NOT NULL DEFAULT 0`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS reminder_type VARCHAR(16) NOT NULL DEFAULT 'email'`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS reminder_timing VARCHAR(32) NOT NULL DEFAULT '15 min'`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS reminder_custom_minutes INT DEFAULT NULL`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS send_email_after_completion TINYINT(1) NOT NULL DEFAULT 0`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS recipient_email VARCHAR(191) DEFAULT NULL`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS email_subject VARCHAR(255) DEFAULT NULL`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS email_message TEXT DEFAULT NULL`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS include_attachment TINYINT(1) NOT NULL DEFAULT 0`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS completion_email_sent_at DATETIME DEFAULT NULL`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS overdue_alert_sent_at DATETIME DEFAULT NULL`,
-  `ALTER TABLE tasks ADD COLUMN IF NOT EXISTS upcoming_deadline_alert_sent_at DATETIME DEFAULT NULL`,
-  `ALTER TABLE email_logs ADD COLUMN IF NOT EXISTS event VARCHAR(64) DEFAULT NULL`,
-  `ALTER TABLE email_logs ADD COLUMN IF NOT EXISTS retry_count INT NOT NULL DEFAULT 0`,
+  `ALTER TABLE tasks ADD COLUMN reminder_enabled TINYINT(1) NOT NULL DEFAULT 0`,
+  `ALTER TABLE tasks ADD COLUMN reminder_type VARCHAR(16) NOT NULL DEFAULT 'email'`,
+  `ALTER TABLE tasks ADD COLUMN reminder_timing VARCHAR(32) NOT NULL DEFAULT '15 min'`,
+  `ALTER TABLE tasks ADD COLUMN reminder_custom_minutes INT DEFAULT NULL`,
+  `ALTER TABLE tasks ADD COLUMN send_email_after_completion TINYINT(1) NOT NULL DEFAULT 0`,
+  `ALTER TABLE tasks ADD COLUMN recipient_email VARCHAR(191) DEFAULT NULL`,
+  `ALTER TABLE tasks ADD COLUMN email_subject VARCHAR(255) DEFAULT NULL`,
+  `ALTER TABLE tasks ADD COLUMN email_message TEXT DEFAULT NULL`,
+  `ALTER TABLE tasks ADD COLUMN include_attachment TINYINT(1) NOT NULL DEFAULT 0`,
+  `ALTER TABLE tasks ADD COLUMN completion_email_sent_at DATETIME DEFAULT NULL`,
+  `ALTER TABLE tasks ADD COLUMN overdue_alert_sent_at DATETIME DEFAULT NULL`,
+  `ALTER TABLE tasks ADD COLUMN upcoming_deadline_alert_sent_at DATETIME DEFAULT NULL`,
+  `ALTER TABLE email_logs ADD COLUMN event VARCHAR(64) DEFAULT NULL`,
+  `ALTER TABLE email_logs ADD COLUMN retry_count INT NOT NULL DEFAULT 0`,
 ];
 
 export const ensureSchema = async () => {

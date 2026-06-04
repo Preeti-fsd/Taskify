@@ -67,7 +67,7 @@ const TaskForm = ({ onAdd }: TaskFormProps) => {
   const [targetPlatform, setTargetPlatform] = useState("");
   const [targetAccount, setTargetAccount] = useState("");
   const [scheduledMessage, setScheduledMessage] = useState("");
-  const [reminderEnabled, setReminderEnabled] = useState(true);
+  const [reminderEnabled, setReminderEnabled] = useState(false);
   const [reminderType, setReminderType] = useState<ReminderType>("both");
   const [reminderTiming, setReminderTiming] = useState<ReminderTiming>("15 min");
   const [reminderCustomMinutes, setReminderCustomMinutes] = useState("15");
@@ -154,7 +154,7 @@ const TaskForm = ({ onAdd }: TaskFormProps) => {
     setTargetPlatform("");
     setTargetAccount("");
     setScheduledMessage("");
-    setReminderEnabled(true);
+    setReminderEnabled(false);
     setReminderType("both");
     setReminderTiming("15 min");
     setReminderCustomMinutes("15");

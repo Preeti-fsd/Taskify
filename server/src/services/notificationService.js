@@ -1,5 +1,4 @@
 import { notificationRepository } from "../repositories/notificationRepository.js";
-import { authRepository } from "../repositories/authRepository.js";
 import { AppError } from "../errors/AppError.js";
 
 const mapNotification = (notification) => ({
@@ -25,9 +24,6 @@ const mapNotification = (notification) => ({
 
 export const notificationService = {
   async listNotifications(userId) {
-    const user = await authRepository.findUserById(userId);
-    if (!user) throw new AppError("User not found.", 404);
-
     const notifications = await notificationRepository.listByUserId(userId, 200);
     return notifications.map(mapNotification);
   },
