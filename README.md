@@ -26,6 +26,7 @@ The application is designed with **performance, accessibility, and scalability i
 # 🧩 Key Features
 
 ## 📋 Task Management
+
 - Add new tasks
 - Edit existing tasks
 - Delete tasks
@@ -36,6 +37,7 @@ The application is designed with **performance, accessibility, and scalability i
 ---
 
 ## 🔎 Filtering & Search
+
 - Filter tasks by:
   - All
   - Pending
@@ -46,6 +48,7 @@ The application is designed with **performance, accessibility, and scalability i
 ---
 
 ## 📊 Task Analytics
+
 - Visual representation of task progress
 - Completed vs Pending task chart
 - Task completion percentage
@@ -55,18 +58,21 @@ The application is designed with **performance, accessibility, and scalability i
 ---
 
 ## 🌗 Theme Support
+
 - Toggle between **Light Mode and Dark Mode**
 - Theme persistence across sessions
 
 ---
 
 ## 💾 Data Persistence
+
 - Tasks are stored using **LocalStorage**
 - Data remains available after refreshing the application
 
 ---
 
 ## 📱 Responsive UI
+
 - Optimized for:
   - Desktop
   - Tablet
@@ -105,7 +111,7 @@ This structure allows each feature to be **modular, reusable, and easier to main
 ✔ Accessibility improvements (`aria-label`, semantic elements)  
 ✔ Responsive design for mobile devices  
 ✔ Lazy loading with React Router  
-✔ Clean component separation  
+✔ Clean component separation
 
 ---
 
