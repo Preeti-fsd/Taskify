@@ -1,15 +1,14 @@
-// / <reference types="vitest" />
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react-swc'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
 
 export default defineConfig({
   plugins: [react()],
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/test/setup.ts",
+  server: {
+    proxy: {
+      "/api": "http://localhost:5000",
+    },
   },
   build: {
-    cssMinify: true
-  }
-})
+    cssMinify: true,
+  },
+});

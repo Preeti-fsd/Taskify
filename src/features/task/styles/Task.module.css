@@ -116,8 +116,66 @@
   gap: 8px;
 }
 
+.toggleGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.toggleButton,
+.toggleButtonActive {
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  display: inline-flex;
+  font-weight: 800;
+  justify-content: center;
+  min-height: 42px;
+  min-width: 72px;
+  padding: 0 14px;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.toggleButton {
+  background: color-mix(in srgb, var(--card-bg) 82%, transparent);
+  color: var(--text-primary);
+}
+
+.toggleButtonActive {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.label {
+  align-items: center;
+  color: var(--text-primary);
+  display: inline-flex;
+  gap: 8px;
+}
+
 .wideField {
   grid-column: span 2;
+}
+
+.reminderField {
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.fieldHint {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.reminderDateInput {
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--input-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
+  background: color-mix(in srgb, var(--accent) 4%, var(--input-bg));
 }
 
 .addButton,

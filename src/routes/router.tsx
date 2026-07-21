@@ -16,7 +16,6 @@ import AdminAnalyticsPage from "../features/admin/pages/AdminAnalyticsPage";
 import AdminSettingsPage from "../features/admin/pages/AdminSettingsPage";
 import WishPage from "../features/wish/pages/WishPage";
 import ProductivityPage from "../features/productivity/pages/ProductivityPage";
-import SettingsPage from "../features/settings/pages/SettingsPage";
 import NotificationCenterPage from "../features/notifications/pages/NotificationCenterPage";
 
 const TaskPage = lazy(() => import("../features/task/pages/TaskPage"));
@@ -102,14 +101,6 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ProductivityPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "settings",
-        element: (
-          <ProtectedRoute>
-            <SettingsPage />
           </ProtectedRoute>
         ),
       },

@@ -14,6 +14,8 @@ interface TaskListProps {
   onDelete: (id: string) => void;
   onToggle: (id: string) => void;
   onEdit: (id: string, newTitle: string) => void;
+  onSubtaskToggle: (task: Task, subtaskId: string) => void;
+  onStartFocus: (task: Task) => void;
   onReorder: (newTasks: Task[]) => void;
 }
 
@@ -22,6 +24,8 @@ const TaskList = ({
   onDelete,
   onToggle,
   onEdit,
+  onSubtaskToggle,
+  onStartFocus,
   onReorder,
 }: TaskListProps) => {
   const handleDragEnd = (event: DragEndEvent) => {
@@ -37,7 +41,14 @@ const TaskList = ({
   };
 
   if (tasks.length === 0) {
-    return <p style={{ marginTop: "20px" }}>No tasks found.</p>;
+    return (
+      <div className={styles.card} style={{ marginTop: 20, justifyContent: "center" }}>
+        <div className={styles.taskBody}>
+          <span className={styles.title}>No tasks yet.</span>
+          <p className={styles.muted}>Create your first task.</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -54,6 +65,8 @@ const TaskList = ({
               onDelete={onDelete}
               onToggle={onToggle}
               onEdit={onEdit}
+              onSubtaskToggle={onSubtaskToggle}
+              onStartFocus={onStartFocus}
             />
           ))}
         </div>

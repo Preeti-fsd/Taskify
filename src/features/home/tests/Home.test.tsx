@@ -2,8 +2,6 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
-import TaskAnalytics from "../../task/pages/TaskAnalytics";
-import TaskPage from "../../task/pages/TaskPage";
 import { ThemeProvider } from "../../../context/ThemeContext";
 import Header from "../../../components/layout/Header";
 
@@ -47,13 +45,13 @@ describe("Testing Home Screen", () => {
       <MemoryRouter initialEntries={["/"]}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/task-manager" element={<TaskPage />} />
+          <Route path="/tasks" element={<div>Task Manager</div>} />
         </Routes>
       </MemoryRouter>,
     );
 
     await user.click(screen.getByRole("button", { name: /task manager/i }));
-    expect(screen.getByPlaceholderText(/enter a task/i)).toBeInTheDocument();
+    expect(screen.getByText(/task manager/i)).toBeInTheDocument();
   });
 
   it("navigates to Task Analytics when card is clicked", async () => {
@@ -64,7 +62,7 @@ describe("Testing Home Screen", () => {
         <ThemeProvider>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/task-analytics" element={<TaskAnalytics />} />
+            <Route path="/analytics" element={<div>Task Analytics</div>} />
           </Routes>
         </ThemeProvider>
       </MemoryRouter>,

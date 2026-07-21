@@ -118,7 +118,6 @@ const TaskItem = ({
                 <span className={`${styles.priorityDot} ${styles[task.priority]}`}>
                   {task.priority}
                 </span>
-                <span>{task.category || "General"}</span>
                 {task.actionType === "email" && (
                   <span>
                     <Mail size={14} /> Email
@@ -140,12 +139,10 @@ const TaskItem = ({
                 )}
                 {task.reminderAt && (
                   <span>
-                    <Bell size={14} /> {new Date(task.reminderAt).toLocaleDateString()}
+                    <Bell size={14} /> {new Date(task.reminderAt).toLocaleString()}
                   </span>
                 )}
-                {task.reminderEnabled && (
-                  <span className={styles.statusChip}>Reminder {task.reminderType || "email"}</span>
-                )}
+                {task.reminderEnabled && <span className={styles.statusChip}>Reminder email</span>}
                 {task.recurring !== "none" && <span>Repeats {task.recurring}</span>}
                 {task.sendEmailAfterCompletion && (
                   <span className={styles.statusChip}>Completion email</span>

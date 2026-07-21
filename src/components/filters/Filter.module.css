@@ -3,51 +3,46 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-.leftSection {
-  display: flex;
-  gap: 10px;
-}
-
+.leftSection,
 .rightSection {
   display: flex;
   gap: 10px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .button {
-  padding: 6px 12px;
-  border-radius: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
   border: 1px solid var(--border-color);
-  background: var(--card-bg);
+  background: color-mix(in srgb, var(--card-bg) 82%, transparent);
   color: var(--text-primary);
-  transition: 0.2s ease;
+  font-weight: 700;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 
 .button:hover {
-  opacity: 0.8;
+  border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .active {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: white;
 }
 
 .searchButton {
-  padding: 6px 10px;
-  border-radius: 6px;
-  /* border: 1px solid var(--border-color); */
-}
-
-.searchButton {
-  background: var(--card-bg);
-  border: 1px solid var(--input-border);
-  /* border: 1px solid var(--border-color); */
-
-  padding: 8px;
-  border-radius: 10px;
+  background: color-mix(in srgb, var(--card-bg) 82%, transparent);
+  border: 1px solid var(--border-color);
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0 10px;
+  border-radius: 999px;
   transition: 0.2s ease;
   display: flex;
   align-items: center;
@@ -57,42 +52,46 @@
 
 .searchButton:hover {
   border-color: var(--accent);
-  background: rgba(99, 102, 241, 0.1);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .searchInput {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  min-width: 180px;
+  min-width: 220px;
+  min-height: 40px;
+  border-radius: 999px;
 }
 
 .sortSelect {
   background: var(--input-bg);
   border: 1px solid var(--input-border);
   color: var(--text-primary);
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-weight: 500;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-weight: 600;
   transition: 0.2s ease;
-
-  /* Remove default browser styles */
   outline: none;
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
   cursor: pointer;
 }
 
-/* Hover */
 .sortSelect:hover {
   border-color: var(--accent);
 }
 
-/* Focus */
 .sortSelect:focus {
   border-color: var(--input-focus);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
 
+@media (max-width: 700px) {
+  .wrapper,
+  .rightSection {
+    width: 100%;
+  }
+
+  .searchInput,
+  .sortSelect {
+    min-width: 0;
+    width: 100%;
+  }
 }

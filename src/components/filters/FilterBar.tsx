@@ -8,8 +8,8 @@ interface FilterBarProps {
   setFilter: (value: TaskStatus | "all") => void;
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  sortBy: "created" | "asc" | "desc";
-  onSortChange: (value: "created" | "asc" | "desc") => void;
+  sortBy: "created" | "asc" | "desc" | "smart";
+  onSortChange: (value: "created" | "asc" | "desc" | "smart") => void;
   task: Task[];
 }
 
@@ -68,12 +68,13 @@ const FilterBar = ({
           <select
             value={sortBy}
             onChange={(e) =>
-              onSortChange(e.target.value as "created" | "asc" | "desc")
+              onSortChange(e.target.value as "created" | "asc" | "desc" | "smart")
             }
             className={styles.sortSelect}
             aria-label="Sort tasks"
           >
             <option value="created">Latest</option>
+            <option value="smart">Smart</option>
             <option value="asc">A-Z</option>
             <option value="desc">Z-A</option>
           </select>

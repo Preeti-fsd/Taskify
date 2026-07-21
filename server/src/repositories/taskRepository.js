@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { execute, query } from "../config/db.js";
 import { taskAttachmentRepository } from "./taskAttachmentRepository.js";
 
@@ -119,6 +120,7 @@ export const taskRepository = {
   async create(userId, task) {
     const result = await execute(
       `INSERT INTO tasks SET
+        id = :id,
         user_id = :userId,
         title = :title,
         status = :status,
@@ -156,6 +158,7 @@ export const taskRepository = {
         upcoming_deadline_alert_sent_at = :upcomingDeadlineAlertSentAt,
         sort_order = :sortOrder`,
       {
+        id: crypto.randomUUID(),
         userId,
         title: task.title,
         status: task.status || "pending",

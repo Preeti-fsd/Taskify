@@ -12,6 +12,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isAuthRoute = authRoutes.has(location.pathname);
+  const isDashboardRoute = location.pathname === "/dashboard";
 
   const handleLogout = () => {
     logout();
@@ -25,13 +26,15 @@ const Header = () => {
         <span>Taskify</span>
       </NavLink>
 
-      {session?.role === "admin" && (
+      {session && isDashboardRoute && <span className={styles.dashboardLabel}>Dashboard</span>}
+
+      {session?.role === "admin" && location.pathname.startsWith("/admin") && (
         <span className={styles.adminBadge} aria-label="Admin mode">
           Admin Mode
         </span>
       )}
 
-      {!isAuthRoute && session && (
+      {!isAuthRoute && session && !isDashboardRoute && (
         <nav className={styles.navLinks} aria-label="Primary">
           <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`} to="/dashboard">
             <LayoutDashboard size={16} />
@@ -52,9 +55,6 @@ const Header = () => {
           <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`} to="/productivity">
             Productivity
           </NavLink>
-          <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`} to="/settings">
-            Settings
-          </NavLink>
           <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`} to="/notifications">
             Notifications
           </NavLink>
@@ -62,18 +62,6 @@ const Header = () => {
             <>
               <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`} to="/admin">
                 Admin
-              </NavLink>
-              <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`} to="/admin/users">
-                Users
-              </NavLink>
-              <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`} to="/admin/email-logs">
-                Email Logs
-              </NavLink>
-              <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`} to="/admin/analytics">
-                Admin Analytics
-              </NavLink>
-              <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`} to="/admin/settings">
-                Settings
               </NavLink>
             </>
           )}

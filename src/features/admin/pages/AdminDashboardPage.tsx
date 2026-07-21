@@ -7,8 +7,6 @@ import type { AdminUserRow } from "../../../services/adminApi";
 
 const AdminDashboardPage = () => {
   const { user } = useAuth();
-  const [total, setTotal] = useState(0);
-  const [emailLogs, setEmailLogs] = useState(0);
   const [recentUsers, setRecentUsers] = useState<AdminUserRow[]>([]);
   const [loggedInUsers, setLoggedInUsers] = useState<AdminUserRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,8 +17,6 @@ const AdminDashboardPage = () => {
       .listUsers()
       .then((result) => {
         if (!active) return;
-        setTotal(result.total);
-        setEmailLogs(result.emailLogs.length);
         setRecentUsers(result.recentUsers);
         setLoggedInUsers(result.loggedInUsers);
       })
@@ -39,7 +35,8 @@ const AdminDashboardPage = () => {
         <span className={styles.eyebrow}>Admin dashboard</span>
         <h1 className={styles.title}>Welcome back{user?.email ? `, ${user.email}` : ""}</h1>
         <p className={styles.subtitle}>
-          Admin console for monitoring users, email logs, analytics, and platform settings.
+          Admins use the same workspace as users, plus admin-only controls for user and email
+          management.
         </p>
         <div className={styles.dashboardActions}>
           <Link className={styles.button} to="/admin/users">
@@ -48,32 +45,7 @@ const AdminDashboardPage = () => {
           <Link className={styles.secondaryButton} to="/admin/email-logs">
             Email logs
           </Link>
-          <Link className={styles.secondaryButton} to="/admin/analytics">
-            Analytics
-          </Link>
-          <Link className={styles.secondaryButton} to="/admin/settings">
-            Settings
-          </Link>
         </div>
-      </section>
-
-      <section className={styles.statsGrid}>
-        <article className={styles.statsCard}>
-          <h3 className={styles.cardTitle}>Total Users</h3>
-          <p className={styles.cardValue}>{loading ? "..." : total}</p>
-        </article>
-        <article className={styles.statsCard}>
-          <h3 className={styles.cardTitle}>Email Logs</h3>
-          <p className={styles.cardValue}>{loading ? "..." : emailLogs}</p>
-        </article>
-        <article className={styles.statsCard}>
-          <h3 className={styles.cardTitle}>User Features</h3>
-          <p className={styles.muted}>Admins inherit the full user workspace after login.</p>
-        </article>
-        <article className={styles.statsCard}>
-          <h3 className={styles.cardTitle}>Admin Access</h3>
-          <p className={styles.muted}>Your account is elevated to admin access for the console.</p>
-        </article>
       </section>
 
       <section className={`${styles.panel} ${styles.stack}`}>

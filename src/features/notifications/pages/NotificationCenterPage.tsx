@@ -25,11 +25,12 @@ const NotificationCenterPage = () => {
     };
   }, []);
 
-  const grouped = useMemo(
+  const stats = useMemo(
     () => ({
-      scheduled: items.filter((item) => item.status === "scheduled"),
-      sent: items.filter((item) => item.status === "sent"),
-      failed: items.filter((item) => item.status === "failed"),
+      total: items.length,
+      failed: items.filter((item) => item.status === "failed").length,
+      sent: items.filter((item) => item.status === "sent").length,
+      scheduled: items.filter((item) => item.status === "scheduled").length,
     }),
     [items],
   );
@@ -43,58 +44,6 @@ const NotificationCenterPage = () => {
       toast.error(error instanceof Error ? error.message : "Unable to retry notification.");
     }
   };
-
-  const renderSection = (title: string, rows: NotificationEvent[]) => (
-    <section className={`${styles.panel} ${styles.stack}`}>
-      <div className={styles.sectionHeader}>
-        <div className={styles.stack}>
-          <span className={styles.eyebrow}>{title}</span>
-          <h2 className={styles.cardTitle}>{title}</h2>
-        </div>
-        <span className={styles.status}>{rows.length} items</span>
-      </div>
-      {rows.length === 0 ? (
-        <p className={styles.muted}>No {title.toLowerCase()} notifications yet.</p>
-      ) : (
-        <div style={{ overflowX: "auto" }}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Event</th>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Retry</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.event}</td>
-                  <td>
-                    <strong>{item.title}</strong>
-                    <p className={styles.muted}>{item.message}</p>
-                  </td>
-                  <td><span className={styles.status}>{item.status}</span></td>
-                  <td>
-                    <button
-                      className={styles.secondaryButton}
-                      type="button"
-                      onClick={() => void handleRetry(item.id)}
-                      disabled={item.status !== "failed"}
-                    >
-                      Retry
-                    </button>
-                  </td>
-                  <td>{new Date(item.createdAt).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </section>
-  );
 
   if (loading) {
     return (
@@ -110,18 +59,60 @@ const NotificationCenterPage = () => {
     <main className={styles.page}>
       <section className={`${styles.panel} ${styles.stack}`}>
         <span className={styles.eyebrow}>Inbox</span>
-        <h1 className={styles.title}>Notification Center</h1>
+        <h1 className={styles.title}>Notifications</h1>
         <p className={styles.subtitle}>
-          Track scheduled, sent, and failed email events here. Failed items can be retried from this
-          screen.
+          One simple list for recent notification activity. Retry only failed items when needed.
         </p>
+        <div className={styles.dashboardActions}>
+          <span className={styles.status}>Total {stats.total}</span>
+          <span className={styles.status}>Scheduled {stats.scheduled}</span>
+          <span className={styles.status}>Sent {stats.sent}</span>
+          <span className={styles.status}>Failed {stats.failed}</span>
+        </div>
       </section>
 
-      <div className={styles.listStack} style={{ marginTop: 18 }}>
-        {renderSection("Scheduled", grouped.scheduled)}
-        {renderSection("Sent", grouped.sent)}
-        {renderSection("Failed", grouped.failed)}
-      </div>
+      <section className={`${styles.panel} ${styles.stack}`} style={{ marginTop: 18 }}>
+        {items.length === 0 ? (
+          <p className={styles.muted}>No notifications yet.</p>
+        ) : (
+          <div style={{ overflowX: "auto" }}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Time</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr key={item.id}>
+                    <td>
+                      <strong>{item.title}</strong>
+                      <p className={styles.muted}>{item.message}</p>
+                    </td>
+                    <td>
+                      <span className={styles.status}>{item.status}</span>
+                    </td>
+                    <td>{new Date(item.createdAt).toLocaleString()}</td>
+                    <td>
+                      <button
+                        className={styles.secondaryButton}
+                        type="button"
+                        onClick={() => void handleRetry(item.id)}
+                        disabled={item.status !== "failed"}
+                      >
+                        Retry
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
     </main>
   );
 };

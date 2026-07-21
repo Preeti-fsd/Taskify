@@ -3,8 +3,9 @@ import Header from "../components/layout/Header";
 import { Toaster } from "sonner";
 import { useTheme } from "../context/useTheme";
 import styles from "../components/layout/Layout.module.css";
+import type { ReactNode } from "react";
 
-const MainLayout = ({ children }: { children?: React.ReactNode }) => {
+const MainLayout = ({ children }: { children?: ReactNode }) => {
   const { theme } = useTheme();
 
   return (

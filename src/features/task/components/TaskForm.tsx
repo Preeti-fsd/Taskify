@@ -1,15 +1,11 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Paperclip, SlidersHorizontal, Upload } from "lucide-react";
 import styles from "../styles/Task.module.css";
-import { useAuth } from "../../../context/useAuth";
 import type {
   PendingAttachment,
-  TaskActionType,
   TaskInput,
   TaskPriority,
   TaskRecurrence,
-  ReminderTiming,
-  ReminderType,
 } from "../../../types/task";
 
 interface TaskFormProps {
@@ -25,14 +21,6 @@ const allowedAttachmentTypes = new Set([
   "image/jpeg",
   "application/zip",
 ]);
-
-const reminderOffsets: Record<Exclude<ReminderTiming, "custom">, number> = {
-  "5 min before": 5,
-  "15 min": 15,
-  "30 min": 30,
-  "1 hour": 60,
-  "1 day": 24 * 60,
-};
 
 const attachmentToPending = async (file: File): Promise<PendingAttachment> => {
   const dataUrl = await new Promise<string>((resolve, reject) => {
@@ -52,118 +40,42 @@ const attachmentToPending = async (file: File): Promise<PendingAttachment> => {
 };
 
 const TaskForm = ({ onAdd }: TaskFormProps) => {
-  const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [priority, setPriority] = useState<TaskPriority>("medium");
-  const [category, setCategory] = useState("");
-  const [tags, setTags] = useState("");
   const [estimatedMinutes, setEstimatedMinutes] = useState("");
   const [recurring, setRecurring] = useState<TaskRecurrence>("none");
-  const [subtasks, setSubtasks] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [actionType, setActionType] = useState<TaskActionType>("task");
-  const [targetEmail, setTargetEmail] = useState("");
-  const [targetPlatform, setTargetPlatform] = useState("");
-  const [targetAccount, setTargetAccount] = useState("");
-  const [scheduledMessage, setScheduledMessage] = useState("");
   const [reminderEnabled, setReminderEnabled] = useState(false);
-  const [reminderType, setReminderType] = useState<ReminderType>("both");
-  const [reminderTiming, setReminderTiming] = useState<ReminderTiming>("15 min");
-  const [reminderCustomMinutes, setReminderCustomMinutes] = useState("15");
   const [reminderAt, setReminderAt] = useState("");
-  const [sendEmailAfterCompletion, setSendEmailAfterCompletion] = useState(false);
-  const [recipientEmail, setRecipientEmail] = useState("");
-  const [emailSubject, setEmailSubject] = useState("");
-  const [emailMessage, setEmailMessage] = useState("");
-  const [includeAttachment, setIncludeAttachment] = useState(true);
+  const [scheduledMessage, setScheduledMessage] = useState("");
   const [attachments, setAttachments] = useState<PendingAttachment[]>([]);
   const [error, setError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
-
-  useEffect(() => {
-    if (!recipientEmail && user?.email) {
-      setRecipientEmail(user.email);
-    }
-  }, [recipientEmail, user?.email]);
-
-  const computedReminderAt = useMemo(() => {
-    if (!reminderEnabled) return null;
-    if (dueDate) {
-      const due = new Date(dueDate);
-      const offsetMinutes =
-        reminderTiming === "custom"
-          ? Number(reminderCustomMinutes || 0)
-          : reminderOffsets[reminderTiming] || 15;
-      if (!Number.isFinite(offsetMinutes) || offsetMinutes < 0) return null;
-      return new Date(due.getTime() - offsetMinutes * 60 * 1000).toISOString();
-    }
-    return reminderAt || null;
-  }, [dueDate, reminderAt, reminderCustomMinutes, reminderEnabled, reminderTiming]);
 
   const buildPayload = (smart = false): TaskInput => ({
     title: title.trim(),
     dueDate: dueDate || null,
     priority: smart ? (dueDate ? "high" : priority) : priority,
-    category: category.trim() || null,
-    tags: tags
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean),
     estimatedMinutes: estimatedMinutes ? Number(estimatedMinutes) : null,
     reminderEnabled,
-    reminderType,
-    reminderTiming,
-    reminderCustomMinutes:
-      reminderTiming === "custom" ? Number(reminderCustomMinutes || 0) : null,
-    reminderAt: computedReminderAt,
+    reminderType: "email",
+    reminderAt: reminderEnabled ? reminderAt || null : null,
     recurring,
-    actionType,
-    targetEmail: targetEmail.trim() || null,
-    targetPlatform: targetPlatform.trim() || null,
-    targetAccount: targetAccount.trim() || null,
+    actionType: "email",
     scheduledMessage: scheduledMessage.trim() || null,
     attachments,
-    sendEmailAfterCompletion,
-    recipientEmail: recipientEmail.trim() || null,
-    emailSubject: emailSubject.trim() || null,
-    emailMessage: emailMessage.trim() || null,
-    includeAttachment,
-    subtasks: subtasks
-      .split(",")
-      .map((subtask) => subtask.trim())
-      .filter(Boolean)
-      .map((subtask) => ({
-        id: crypto.randomUUID(),
-        title: subtask,
-        completed: false,
-      })),
   });
 
   const resetFields = () => {
     setTitle("");
     setDueDate("");
     setPriority("medium");
-    setCategory("");
-    setTags("");
     setEstimatedMinutes("");
     setRecurring("none");
-    setSubtasks("");
-    setActionType("task");
-    setTargetEmail("");
-    setTargetPlatform("");
-    setTargetAccount("");
-    setScheduledMessage("");
     setReminderEnabled(false);
-    setReminderType("both");
-    setReminderTiming("15 min");
-    setReminderCustomMinutes("15");
     setReminderAt("");
-    setSendEmailAfterCompletion(false);
-    setRecipientEmail(user?.email || "");
-    setEmailSubject("");
-    setEmailMessage("");
-    setIncludeAttachment(true);
+    setScheduledMessage("");
     setAttachments([]);
     setError("");
   };
@@ -202,8 +114,8 @@ const TaskForm = ({ onAdd }: TaskFormProps) => {
       return;
     }
 
-    if (reminderTiming === "custom" && Number.isNaN(Number(reminderCustomMinutes))) {
-      setError("Custom reminder minutes must be a valid number.");
+    if (reminderEnabled && !reminderAt) {
+      setError("Reminder date and time is required when reminders are enabled.");
       return;
     }
 
@@ -266,16 +178,6 @@ const TaskForm = ({ onAdd }: TaskFormProps) => {
       {showAdvanced && (
         <div className={styles.advancedFields}>
           <label>
-            Category
-            <input
-              className={styles.input}
-              type="text"
-              placeholder="Optional category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            />
-          </label>
-          <label>
             Priority
             <select
               value={priority}
@@ -316,65 +218,37 @@ const TaskForm = ({ onAdd }: TaskFormProps) => {
           </label>
           <label>
             Reminder enabled
-            <select
-              value={String(reminderEnabled)}
-              onChange={(e) => setReminderEnabled(e.target.value === "true")}
-              className={styles.selectInput}
-            >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
+            <div className={styles.toggleGroup} role="radiogroup" aria-label="Reminder enabled">
+              <button
+                type="button"
+                className={reminderEnabled ? styles.toggleButtonActive : styles.toggleButton}
+                aria-pressed={reminderEnabled}
+                onClick={() => setReminderEnabled(true)}
+              >
+                Yes
+              </button>
+              <button
+                type="button"
+                className={!reminderEnabled ? styles.toggleButtonActive : styles.toggleButton}
+                aria-pressed={!reminderEnabled}
+                onClick={() => setReminderEnabled(false)}
+              >
+                No
+              </button>
+            </div>
           </label>
-          <label>
-            Reminder type
-            <select
-              value={reminderType}
-              onChange={(e) => setReminderType(e.target.value as ReminderType)}
-              className={styles.selectInput}
-            >
-              <option value="email">Email</option>
-              <option value="in-app">In-App</option>
-              <option value="both">Both</option>
-            </select>
+          <label className={`${styles.wideField} ${styles.reminderField}`}>
+            Reminder date and time
+            <span className={styles.fieldHint}>Local date and time, used for email reminders.</span>
+            <input
+              type="datetime-local"
+              value={reminderAt}
+              onChange={(e) => setReminderAt(e.target.value)}
+              className={styles.reminderDateInput}
+              aria-label="Reminder date and time"
+              step="60"
+            />
           </label>
-          <label>
-            Reminder timing
-            <select
-              value={reminderTiming}
-              onChange={(e) => setReminderTiming(e.target.value as ReminderTiming)}
-              className={styles.selectInput}
-            >
-              <option value="5 min before">5 min before</option>
-              <option value="15 min">15 min</option>
-              <option value="30 min">30 min</option>
-              <option value="1 hour">1 hour</option>
-              <option value="1 day">1 day</option>
-              <option value="custom">Custom</option>
-            </select>
-          </label>
-          {reminderTiming === "custom" ? (
-            <label>
-              Custom reminder minutes
-              <input
-                type="number"
-                min="1"
-                value={reminderCustomMinutes}
-                onChange={(e) => setReminderCustomMinutes(e.target.value)}
-                className={styles.numberInput}
-              />
-            </label>
-          ) : (
-            <label>
-              Reminder time
-              <input
-                type="datetime-local"
-                value={reminderAt}
-                onChange={(e) => setReminderAt(e.target.value)}
-                className={styles.dateInput}
-                aria-label="Reminder time"
-              />
-            </label>
-          )}
           <label className={styles.wideField}>
             Reminder note
             <textarea
@@ -383,87 +257,18 @@ const TaskForm = ({ onAdd }: TaskFormProps) => {
               onChange={(e) => setScheduledMessage(e.target.value)}
             />
           </label>
-          <label>
-            Action type
-            <select
-              value={actionType}
-              onChange={(e) => setActionType(e.target.value as TaskActionType)}
-              className={styles.selectInput}
-              aria-label="Action type"
-            >
-              <option value="task">Normal task</option>
-              <option value="email">Email reminder</option>
-              <option value="wish">Wish/message reminder</option>
-            </select>
-          </label>
-          {(actionType === "email" || actionType === "wish") && (
-            <label>
-              Email target
-              <input
-                className={styles.input}
-                type="email"
-                placeholder="Optional email"
-                value={targetEmail}
-                onChange={(e) => setTargetEmail(e.target.value)}
-              />
-            </label>
-          )}
-          {actionType === "wish" && (
-            <>
-              <label>
-                Platform
-                <select
-                  value={targetPlatform}
-                  onChange={(e) => setTargetPlatform(e.target.value)}
-                  className={styles.selectInput}
-                  aria-label="Wish platform"
-                >
-                  <option value="">Optional platform</option>
-                  <option value="Instagram">Instagram</option>
-                  <option value="WhatsApp">WhatsApp</option>
-                  <option value="Email">Email</option>
-                  <option value="Phone">Phone</option>
-                  <option value="Other">Other</option>
-                </select>
-              </label>
-              <label>
-                Account name
-                <input
-                  className={styles.input}
-                  type="text"
-                  placeholder="@username"
-                  value={targetAccount}
-                  onChange={(e) => setTargetAccount(e.target.value)}
-                />
-              </label>
-            </>
-          )}
-          <label>
-            Tags
-            <input
-              className={styles.input}
-              type="text"
-              placeholder="Optional tags"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-            />
-          </label>
-          <label className={styles.wideField}>
-            Subtasks
-            <input
-              className={styles.input}
-              type="text"
-              placeholder="Optional subtasks"
-              value={subtasks}
-              onChange={(e) => setSubtasks(e.target.value)}
-            />
-          </label>
 
-          <div className={styles.wideField} onDragOver={(e) => e.preventDefault()} onDrop={(e) => {
-            e.preventDefault();
-            setIsDragging(false);
-            void handleFiles(e.dataTransfer.files);
-          }}>
+          <div
+            className={styles.wideField}
+            onDragOver={(e) => e.preventDefault()}
+            onDragEnter={() => setIsDragging(true)}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setIsDragging(false);
+              void handleFiles(e.dataTransfer.files);
+            }}
+          >
             <label className={styles.uploadArea} data-dragging={isDragging ? "true" : "false"}>
               <span className={styles.label}>
                 <Upload size={16} /> Upload Document
@@ -503,57 +308,6 @@ const TaskForm = ({ onAdd }: TaskFormProps) => {
               </div>
             )}
           </div>
-
-          <label className={styles.wideField}>
-            Completion email subject
-            <input
-              className={styles.input}
-              type="text"
-              placeholder={`Task Completed: ${title || "Task"}`}
-              value={emailSubject}
-              onChange={(e) => setEmailSubject(e.target.value)}
-            />
-          </label>
-          <label className={styles.wideField}>
-            Completion email message
-            <textarea
-              placeholder="Optional custom completion message"
-              value={emailMessage}
-              onChange={(e) => setEmailMessage(e.target.value)}
-            />
-          </label>
-          <label>
-            Send Email After Completion
-            <select
-              value={String(sendEmailAfterCompletion)}
-              onChange={(e) => setSendEmailAfterCompletion(e.target.value === "true")}
-              className={styles.selectInput}
-            >
-              <option value="false">Off</option>
-              <option value="true">On</option>
-            </select>
-          </label>
-          <label>
-            Recipient Email
-            <input
-              className={styles.input}
-              type="email"
-              placeholder={user?.email || "recipient@example.com"}
-              value={recipientEmail}
-              onChange={(e) => setRecipientEmail(e.target.value)}
-            />
-          </label>
-          <label>
-            Include Attachments
-            <select
-              value={String(includeAttachment)}
-              onChange={(e) => setIncludeAttachment(e.target.value === "true")}
-              className={styles.selectInput}
-            >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          </label>
         </div>
       )}
     </form>
