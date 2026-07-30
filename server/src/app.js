@@ -40,10 +40,9 @@ app.use("/api/admin", adminRoutes);
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(clientDistPath));
 
-  app.get("*", (req, res, next) => {
+  app.use((req, res, next) => {
     if (req.path.startsWith("/api")) {
-      next();
-      return;
+      return next();
     }
 
     res.sendFile(path.join(clientDistPath, "index.html"));
