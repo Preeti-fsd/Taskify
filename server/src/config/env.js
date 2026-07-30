@@ -27,9 +27,9 @@ export const env = {
   emailUser: process.env.EMAIL_USER || "",
   emailPass: process.env.EMAIL_PASS || "",
   emailFrom: process.env.EMAIL_FROM || process.env.EMAIL_USER || "",
-  emailReminderIntervalMs: toNumber(process.env.EMAIL_REMINDER_INTERVAL_MS, 300000),
-  adminEmails: toList(process.env.ADMIN_EMAILS, [
-    "preetiny77@gmail.com",
-    "preetiny77@gmil.com",
-  ]),
+  emailReminderIntervalMs: toNumber(
+    process.env.EMAIL_REMINDER_INTERVAL_MS,
+    300000,
+  ),
+  adminEmails: toList(process.env.ADMIN_EMAILS, ["preetiny77@gmail.com"]),
 };
