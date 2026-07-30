@@ -34,6 +34,13 @@ export const pool = mysql.createPool({
   connectionLimit: 10,
   namedPlaceholders: true,
   dateStrings: true,
+
+  ssl:
+    env.dbHost && env.dbHost.includes("aivencloud.com")
+      ? {
+          rejectUnauthorized: false,
+        }
+      : undefined,
 });
 
 export const query = async (sql, params = []) => {
