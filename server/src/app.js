@@ -20,7 +20,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: env.frontendUrl,
+    origin: true,
     credentials: true,
   }),
 );
