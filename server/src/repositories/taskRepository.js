@@ -20,7 +20,9 @@ const mapTaskRow = (row) => ({
   status: row.status,
   createdAt: row.created_at ? new Date(row.created_at).getTime() : Date.now(),
   updateAt: row.updated_at ? new Date(row.updated_at).getTime() : undefined,
-  completedAt: row.completed_at ? new Date(row.completed_at).getTime() : undefined,
+  completedAt: row.completed_at
+    ? new Date(row.completed_at).getTime()
+    : undefined,
   dueDate: row.due_date || undefined,
   priority: row.priority,
   category: row.category,
@@ -36,7 +38,9 @@ const mapTaskRow = (row) => ({
   targetPlatform: row.target_platform || undefined,
   targetAccount: row.target_account || undefined,
   scheduledMessage: row.scheduled_message || undefined,
-  reminderSentAt: row.reminder_sent_at ? new Date(row.reminder_sent_at).getTime() : undefined,
+  reminderSentAt: row.reminder_sent_at
+    ? new Date(row.reminder_sent_at).getTime()
+    : undefined,
   emailReminderSentAt: row.email_reminder_sent_at
     ? new Date(row.email_reminder_sent_at).getTime()
     : undefined,
@@ -66,7 +70,9 @@ const toDateOrNull = (value) => (value ? new Date(value) : null);
 const attachFiles = async (tasks) => {
   if (!tasks.length) return tasks;
 
-  const attachments = await taskAttachmentRepository.listByTaskIds(tasks.map((task) => task.id));
+  const attachments = await taskAttachmentRepository.listByTaskIds(
+    tasks.map((task) => task.id),
+  );
   const grouped = attachments.reduce((acc, attachment) => {
     acc[attachment.task_id] ??= [];
     acc[attachment.task_id].push({
@@ -118,7 +124,8 @@ export const taskRepository = {
   },
 
   async create(userId, task) {
-    const result = await execute(
+    const id = crypto.randomUUID();
+    await execute(
       `INSERT INTO tasks SET
         id = :id,
         user_id = :userId,
@@ -191,12 +198,14 @@ export const taskRepository = {
         includeAttachment: task.includeAttachment ? 1 : 0,
         completionEmailSentAt: toDateOrNull(task.completionEmailSentAt),
         overdueAlertSentAt: toDateOrNull(task.overdueAlertSentAt),
-        upcomingDeadlineAlertSentAt: toDateOrNull(task.upcomingDeadlineAlertSentAt),
+        upcomingDeadlineAlertSentAt: toDateOrNull(
+          task.upcomingDeadlineAlertSentAt,
+        ),
         sortOrder: task.sortOrder ?? 0,
       },
     );
 
-    return this.findById(result.insertId, userId);
+    return this.findById(id, userId);
   },
 
   async update(id, userId, task) {
@@ -240,7 +249,10 @@ export const taskRepository = {
       {
         title: task.title ?? null,
         status: task.status ?? null,
-        completedAt: task.completedAt === undefined ? null : toDateOrNull(task.completedAt),
+        completedAt:
+          task.completedAt === undefined
+            ? null
+            : toDateOrNull(task.completedAt),
         dueDate: task.dueDate ?? null,
         priority: task.priority ?? null,
         category: task.category ?? null,
@@ -250,17 +262,28 @@ export const taskRepository = {
         actualMinutes: task.actualMinutes ?? null,
         reminderAt: task.reminderAt ?? null,
         recurrence: task.recurring ?? null,
-        focusSessionsJson: task.focusSessions ? toJson(task.focusSessions) : null,
+        focusSessionsJson: task.focusSessions
+          ? toJson(task.focusSessions)
+          : null,
         actionType: task.actionType ?? null,
         targetEmail: task.targetEmail ?? null,
         targetPlatform: task.targetPlatform ?? null,
         targetAccount: task.targetAccount ?? null,
         scheduledMessage: task.scheduledMessage ?? null,
-        reminderSentAt: task.reminderSentAt === undefined ? null : toDateOrNull(task.reminderSentAt),
+        reminderSentAt:
+          task.reminderSentAt === undefined
+            ? null
+            : toDateOrNull(task.reminderSentAt),
         emailReminderSentAt:
-          task.emailReminderSentAt === undefined ? null : toDateOrNull(task.emailReminderSentAt),
+          task.emailReminderSentAt === undefined
+            ? null
+            : toDateOrNull(task.emailReminderSentAt),
         reminderEnabled:
-          task.reminderEnabled === undefined ? null : task.reminderEnabled ? 1 : 0,
+          task.reminderEnabled === undefined
+            ? null
+            : task.reminderEnabled
+              ? 1
+              : 0,
         reminderType: task.reminderType ?? null,
         reminderTiming: task.reminderTiming ?? null,
         reminderCustomMinutes: task.reminderCustomMinutes ?? null,
@@ -274,13 +297,19 @@ export const taskRepository = {
         emailSubject: task.emailSubject ?? null,
         emailMessage: task.emailMessage ?? null,
         includeAttachment:
-          task.includeAttachment === undefined ? null : task.includeAttachment ? 1 : 0,
+          task.includeAttachment === undefined
+            ? null
+            : task.includeAttachment
+              ? 1
+              : 0,
         completionEmailSentAt:
           task.completionEmailSentAt === undefined
             ? null
             : toDateOrNull(task.completionEmailSentAt),
         overdueAlertSentAt:
-          task.overdueAlertSentAt === undefined ? null : toDateOrNull(task.overdueAlertSentAt),
+          task.overdueAlertSentAt === undefined
+            ? null
+            : toDateOrNull(task.overdueAlertSentAt),
         upcomingDeadlineAlertSentAt:
           task.upcomingDeadlineAlertSentAt === undefined
             ? null
@@ -294,10 +323,10 @@ export const taskRepository = {
   },
 
   async delete(id, userId) {
-    await execute(
-      `DELETE FROM tasks WHERE id = ? AND user_id = ?`,
-      [id, userId],
-    );
+    await execute(`DELETE FROM tasks WHERE id = ? AND user_id = ?`, [
+      id,
+      userId,
+    ]);
   },
 
   async reorder(userId, tasks) {
