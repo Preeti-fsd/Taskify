@@ -25,7 +25,23 @@ export const useTasks = () => {
 
   const addTask = useCallback(async (payload: TaskInput) => {
     const task = await taskApi.createTask(payload);
-    setTasks((prev) => [task, ...prev]);
+    console.log("===== CREATED TASK =====");
+    console.log(task);
+
+    setTasks((prev) => {
+      console.log("===== TASKS BEFORE =====");
+      console.log(prev);
+
+      console.log("===== ADDING =====");
+      console.log(task);
+
+      const next = [task, ...prev];
+
+      console.log("===== TASKS AFTER =====");
+      console.log(next);
+
+      return next;
+    });
   }, []);
 
   const updateTask = useCallback(
@@ -48,12 +64,15 @@ export const useTasks = () => {
     setTasks(savedTasks);
   }, []);
 
-  const addFocusSession = useCallback(async (task: Task, session: FocusSession) => {
-    const updatedTask = await taskApi.addFocusSession(task, session);
-    setTasks((prev) =>
-      prev.map((item) => (item.id === updatedTask.id ? updatedTask : item)),
-    );
-  }, []);
+  const addFocusSession = useCallback(
+    async (task: Task, session: FocusSession) => {
+      const updatedTask = await taskApi.addFocusSession(task, session);
+      setTasks((prev) =>
+        prev.map((item) => (item.id === updatedTask.id ? updatedTask : item)),
+      );
+    },
+    [],
+  );
 
   return {
     tasks,
